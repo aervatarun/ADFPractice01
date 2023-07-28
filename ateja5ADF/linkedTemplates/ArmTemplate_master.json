@@ -1,0 +1,230 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "ateja5ADF"
+		},
+		"ADLSLinkedService1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ADLSLinkedService1'"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=ateja5demosqlserver.database.windows.net;Initial Catalog=sqlserverdb"
+		},
+		"AzureSqlDatabaseLinkedService1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabaseLinkedService1'"
+		},
+		"MetaDataDrivenAppADLSLInkedService_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'MetaDataDrivenAppADLSLInkedService'"
+		},
+		"MetaDataDrivenAppSampledDataADLS_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'MetaDataDrivenAppSampledDataADLS'"
+		},
+		"MetaDataDrivernAppSampledDadtaDb_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'MetaDataDrivernAppSampledDadtaDb'"
+		},
+		"MetaDrivernAppSQLLinkedService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'MetaDrivernAppSQLLinkedService'"
+		},
+		"ParameterisedSQLDBLinkedService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ParameterisedSQLDBLinkedService'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=ateja5demosqlserver.database.windows.net;Initial Catalog=@{linkedService().dbName};User ID=@{linkedService().username};Password=@{linkedService().password}"
+		},
+		"ParameterizdADLS1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ParameterizdADLS1'"
+		},
+		"SalesDBLinkedService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SalesDBLinkedService'"
+		},
+		"dataIngestionNotebook1_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'dataIngestionNotebook1'"
+		},
+		"ADLSLinkedService1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://ateja5storageaccount.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://ateja5storageaccount.dfs.core.windows.net/"
+		},
+		"MetaDataDrivenAppADLSLInkedService_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://ateja5storageaccount.dfs.core.windows.net/"
+		},
+		"MetaDataDrivenAppSampledDataADLS_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://ateja5storageaccount.dfs.core.windows.net/"
+		},
+		"ParameterizdADLS1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://ateja5storageaccount.dfs.core.windows.net/"
+		},
+		"dataIngestionNotebook1_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0710-115713-xaestbsh"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "ateja5ADF_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"ADLSLinkedService1_accountKey": {
+						"value": "[parameters('ADLSLinkedService1_accountKey')]"
+					},
+					"AzureDataLakeStorage1_accountKey": {
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					},
+					"AzureSqlDatabaseLinkedService1_connectionString": {
+						"value": "[parameters('AzureSqlDatabaseLinkedService1_connectionString')]"
+					},
+					"MetaDataDrivenAppADLSLInkedService_accountKey": {
+						"value": "[parameters('MetaDataDrivenAppADLSLInkedService_accountKey')]"
+					},
+					"MetaDataDrivenAppSampledDataADLS_accountKey": {
+						"value": "[parameters('MetaDataDrivenAppSampledDataADLS_accountKey')]"
+					},
+					"MetaDataDrivernAppSampledDadtaDb_connectionString": {
+						"value": "[parameters('MetaDataDrivernAppSampledDadtaDb_connectionString')]"
+					},
+					"MetaDrivernAppSQLLinkedService_connectionString": {
+						"value": "[parameters('MetaDrivernAppSQLLinkedService_connectionString')]"
+					},
+					"ParameterisedSQLDBLinkedService_connectionString": {
+						"value": "[parameters('ParameterisedSQLDBLinkedService_connectionString')]"
+					},
+					"ParameterizdADLS1_accountKey": {
+						"value": "[parameters('ParameterizdADLS1_accountKey')]"
+					},
+					"SalesDBLinkedService_connectionString": {
+						"value": "[parameters('SalesDBLinkedService_connectionString')]"
+					},
+					"dataIngestionNotebook1_accessToken": {
+						"value": "[parameters('dataIngestionNotebook1_accessToken')]"
+					},
+					"ADLSLinkedService1_properties_typeProperties_url": {
+						"value": "[parameters('ADLSLinkedService1_properties_typeProperties_url')]"
+					},
+					"AzureDataLakeStorage1_properties_typeProperties_url": {
+						"value": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
+					},
+					"MetaDataDrivenAppADLSLInkedService_properties_typeProperties_url": {
+						"value": "[parameters('MetaDataDrivenAppADLSLInkedService_properties_typeProperties_url')]"
+					},
+					"MetaDataDrivenAppSampledDataADLS_properties_typeProperties_url": {
+						"value": "[parameters('MetaDataDrivenAppSampledDataADLS_properties_typeProperties_url')]"
+					},
+					"ParameterizdADLS1_properties_typeProperties_url": {
+						"value": "[parameters('ParameterizdADLS1_properties_typeProperties_url')]"
+					},
+					"dataIngestionNotebook1_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('dataIngestionNotebook1_properties_typeProperties_existingClusterId')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "ateja5ADF_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ateja5ADF_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "ateja5ADF_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureSqlDatabase1_connectionString": {
+						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ateja5ADF_ArmTemplate_1')]"
+			]
+		},
+		{
+			"name": "ateja5ADF_ArmTemplate_3",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ateja5ADF_ArmTemplate_2')]"
+			]
+		}
+	]
+}

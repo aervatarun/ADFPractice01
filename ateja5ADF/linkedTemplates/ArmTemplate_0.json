@@ -1,0 +1,653 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "ateja5ADF"
+		},
+		"ADLSLinkedService1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ADLSLinkedService1'"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
+		},
+		"AzureSqlDatabaseLinkedService1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabaseLinkedService1'"
+		},
+		"MetaDataDrivenAppADLSLInkedService_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'MetaDataDrivenAppADLSLInkedService'"
+		},
+		"MetaDataDrivenAppSampledDataADLS_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'MetaDataDrivenAppSampledDataADLS'"
+		},
+		"MetaDataDrivernAppSampledDadtaDb_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'MetaDataDrivernAppSampledDadtaDb'"
+		},
+		"MetaDrivernAppSQLLinkedService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'MetaDrivernAppSQLLinkedService'"
+		},
+		"ParameterisedSQLDBLinkedService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ParameterisedSQLDBLinkedService'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=ateja5demosqlserver.database.windows.net;Initial Catalog=@{linkedService().dbName};User ID=@{linkedService().username};Password=@{linkedService().password}"
+		},
+		"ParameterizdADLS1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ParameterizdADLS1'"
+		},
+		"SalesDBLinkedService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SalesDBLinkedService'"
+		},
+		"dataIngestionNotebook1_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'dataIngestionNotebook1'"
+		},
+		"ADLSLinkedService1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://ateja5storageaccount.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://ateja5storageaccount.dfs.core.windows.net/"
+		},
+		"MetaDataDrivenAppADLSLInkedService_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://ateja5storageaccount.dfs.core.windows.net/"
+		},
+		"MetaDataDrivenAppSampledDataADLS_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://ateja5storageaccount.dfs.core.windows.net/"
+		},
+		"ParameterizdADLS1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://ateja5storageaccount.dfs.core.windows.net/"
+		},
+		"dataIngestionNotebook1_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0710-115713-xaestbsh"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/FilterActUsingVariable')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "FilterAct1",
+						"type": "Filter",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('array1')",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@greater(item(),3)",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"array1": {
+						"type": "Array",
+						"defaultValue": [
+							1,
+							2,
+							3,
+							4,
+							5,
+							6,
+							7,
+							8,
+							9,
+							10
+						]
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-07-01T02:46:09Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ForEachWithFIlterAcitivity')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('array1')",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Filter1",
+									"type": "Filter",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"items": {
+											"value": "@item()",
+											"type": "Expression"
+										},
+										"condition": {
+											"value": "@greater(item(),3)",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"array1": {
+						"type": "Array",
+						"defaultValue": [
+							1,
+							2,
+							3,
+							4,
+							5,
+							6,
+							7,
+							8,
+							9
+						]
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-07-01T03:08:19Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ADLSLinkedService1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ADLSLinkedService1_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ADLSLinkedService1_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabaseLinkedService1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSqlDatabaseLinkedService1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MetaDataDrivenAppADLSLInkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('MetaDataDrivenAppADLSLInkedService_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('MetaDataDrivenAppADLSLInkedService_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MetaDataDrivenAppSampledDataADLS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('MetaDataDrivenAppSampledDataADLS_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('MetaDataDrivenAppSampledDataADLS_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MetaDataDrivernAppSampledDadtaDb')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('MetaDataDrivernAppSampledDadtaDb_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MetaDrivernAppSQLLinkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('MetaDrivernAppSQLLinkedService_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParameterisedSQLDBLinkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"dbName": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('ParameterisedSQLDBLinkedService_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParameterizdADLS1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ParameterizdADLS1_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ParameterizdADLS1_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SalesDBLinkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('SalesDBLinkedService_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataIngestionNotebook1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-7221311577904409.9.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('dataIngestionNotebook1_accessToken')]"
+					},
+					"existingClusterId": "[parameters('dataIngestionNotebook1_properties_typeProperties_existingClusterId')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/credential1')]",
+			"type": "Microsoft.DataFactory/factories/credentials",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "ManagedIdentity",
+				"typeProperties": {
+					"resourceId": "/subscriptions/4f1e63b8-e09a-44ac-be35-0b0f2af09f06/resourcegroups/ateja5_storage/providers/Microsoft.ManagedIdentity/userAssignedIdentities/AZDemoUserID"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/credential2')]",
+			"type": "Microsoft.DataFactory/factories/credentials",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "ManagedIdentity",
+				"typeProperties": {
+					"resourceId": "/subscriptions/4f1e63b8-e09a-44ac-be35-0b0f2af09f06/resourcegroups/ateja5_storage/providers/Microsoft.ManagedIdentity/userAssignedIdentities/AZDemoUserID"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DatabricksADFMultipleTablesIngestion')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('tableNames')",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Set variable1",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "val",
+										"value": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
+								},
+								{
+									"name": "Notebook1",
+									"type": "DatabricksNotebook",
+									"dependsOn": [
+										{
+											"activity": "Set variable1",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"notebookPath": "/Users/tanishjprof@gmail.com/data-ingestion-notebook-for-ADF",
+										"baseParameters": {
+											"sqlServerInputTable": {
+												"value": "@variables('val')",
+												"type": "Expression"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "dataIngestionNotebook1",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"tableNames": {
+						"type": "Array",
+						"defaultValue": [
+							"empdata1",
+							"empdata2",
+							"empdata3"
+						]
+					},
+					"val": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-07-10T14:06:35Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/dataIngestionNotebook1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DatabricksSQLTableCopyUsing')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "dataIngestionNotebookProcess",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "inputTableNameVariable",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/tanishjprof@gmail.com/data-ingestion-notebook-for-ADF",
+							"baseParameters": {
+								"sqlServerInputTable": {
+									"value": "@variables('inputTableName')",
+									"type": "Expression"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "dataIngestionNotebook1",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "inputTableNameVariable",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "inputTableName",
+							"value": {
+								"value": "@pipeline().parameters.tableParam",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"tableParam": {
+						"type": "string",
+						"defaultValue": "empdata1"
+					}
+				},
+				"variables": {
+					"inputTableName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-07-10T14:14:34Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/dataIngestionNotebook1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ADLSTextDelimitedFile1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLSLinkedService1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "empdata3.txt",
+						"fileSystem": "csv"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLSLinkedService1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSQLServerDBTables1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseLinkedService1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "sqlserverdb",
+					"table": "empdata3"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseLinkedService1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseLinkedService1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tablename": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "sqlserverdb",
+					"table": {
+						"value": "@dataset().tablename",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseLinkedService1')]"
+			]
+		}
+	]
+}

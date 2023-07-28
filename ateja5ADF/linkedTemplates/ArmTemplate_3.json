@@ -1,0 +1,1333 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "ateja5ADF"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ParameterizedCopyDataActivitySQLDB')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ParameterizedCopyDataActivity",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "emp_id",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "emp_id",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "name",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "name",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "age",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "age",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "load_dt",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "load_dt",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "file",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "file",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ParameterizedSQLDBTables",
+								"type": "DatasetReference",
+								"parameters": {
+									"dbName": "sqlserverdb",
+									"username": "ateja5",
+									"password": "T*run1997",
+									"talename": "empdata1"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ParameterizedSQLDBTables",
+								"type": "DatasetReference",
+								"parameters": {
+									"dbName": "sqlserverdb",
+									"username": "ateja5",
+									"password": "T*run1997",
+									"talename": "empdata2"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-30T16:48:53Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "emp_id",
+						"type": "nvarchar"
+					},
+					{
+						"name": "name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "age",
+						"type": "nvarchar"
+					},
+					{
+						"name": "load_dt",
+						"type": "nvarchar"
+					},
+					{
+						"name": "file",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "sqlserverdb",
+					"table": "empdata2"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/UserAssignedSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "emp_id",
+						"type": "nvarchar"
+					},
+					{
+						"name": "name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "age",
+						"type": "nvarchar"
+					},
+					{
+						"name": "load_dt",
+						"type": "nvarchar"
+					},
+					{
+						"name": "file",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "sqlserverdb",
+					"table": "empdata1"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "logTextFile",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "logFile",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "select1"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     ADFName as string,",
+						"     PipelineName as string,",
+						"     Status as string,",
+						"     RunID as string,",
+						"     TriggerName as string,",
+						"     fileName as string",
+						"}",
+						"source(output(",
+						"          Column_1 as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 derive(ADFName = $ADFName,",
+						"          PipelineName = $PipelineName,",
+						"          Status = $Status,",
+						"          RunID = $RunID,",
+						"          TriggerName = $TriggerName) ~> derivedColumn1",
+						"derivedColumn1 select(mapColumn(",
+						"          ADFName,",
+						"          PipelineName,",
+						"          Status,",
+						"          RunID,",
+						"          TriggerName",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:[($fileName)],",
+						"     umask: 0777,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1_copy1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "logTextFile",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						},
+						{
+							"dataset": {
+								"referenceName": "logTextExistingFilke",
+								"type": "DatasetReference"
+							},
+							"name": "logTextFileExisting"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "logFile",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "union1"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     ADFName as string,",
+						"     PipelineName as string,",
+						"     Status as string,",
+						"     RunID as string,",
+						"     TriggerName as string,",
+						"     fileName as string",
+						"}",
+						"source(output(",
+						"          Column_1 as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> logTextFileExisting",
+						"source1 derive(ADFName = $ADFName,",
+						"          PipelineName = $PipelineName,",
+						"          Status = $Status,",
+						"          RunID = $RunID,",
+						"          TriggerName = $TriggerName) ~> derivedColumn1",
+						"derivedColumn1 select(mapColumn(",
+						"          ADFName,",
+						"          PipelineName,",
+						"          Status,",
+						"          RunID,",
+						"          TriggerName",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1, logTextFileExisting union(byName: true)~> union1",
+						"union1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:[($fileName)],",
+						"     umask: 0777,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ExecutePipelineUsingaChildPipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ParentPipeline",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "IfIterCopyAcitivity",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"var1": {
+									"value": "@pipeline().parameters.inputParam",
+									"type": "Expression"
+								}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"inputParam": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"var1": {
+						"type": "String",
+						"defaultValue": "Tarun"
+					},
+					"arr1": {
+						"type": "Array"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-07-02T07:21:37Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MetadataDrivenCopyTask1_mbv_MiddleLevel')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "This pipeline will copy one batch of objects. The objects belonging to this batch will be copied parallelly.",
+				"activities": [
+					{
+						"name": "DivideOneBatchIntoMultipleGroups",
+						"description": "Divide objects from single batch into multiple sub parallel groups to avoid reaching the output limit of lookup activity.",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@range(0, add(div(pipeline().parameters.SumOfObjectsToCopyForCurrentBatch, pipeline().parameters.MaxNumberOfObjectsReturnedFromLookupActivity),\n                    if(equals(mod(pipeline().parameters.SumOfObjectsToCopyForCurrentBatch, pipeline().parameters.MaxNumberOfObjectsReturnedFromLookupActivity), 0), 0, 1)))",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"batchCount": 50,
+							"activities": [
+								{
+									"name": "GetObjectsPerGroupToCopy",
+									"description": "Get objects (tables etc.) from control table required to be copied in this group. The order of objects to be copied following the TaskId in control table (ORDER BY [TaskId] DESC).",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "WITH OrderedControlTable AS (\n                             SELECT *, ROW_NUMBER() OVER (ORDER BY [TaskId], [Id] DESC) AS RowNumber\n                             FROM @{pipeline().parameters.MainControlTableName}\n                             where TopLevelPipelineName = '@{pipeline().parameters.TopLevelPipelineName}'\n                             and TriggerName like '%@{pipeline().parameters.TriggerName}%' and CopyEnabled = 1)\n                             SELECT * FROM OrderedControlTable WHERE RowNumber BETWEEN @{add(mul(int(item()),pipeline().parameters.MaxNumberOfObjectsReturnedFromLookupActivity),\n                             add(mul(pipeline().parameters.SumOfObjectsToCopyForCurrentBatch, pipeline().parameters.CurrentSequentialNumberOfBatch), 1))}\n                             AND @{min(add(mul(int(item()), pipeline().parameters.MaxNumberOfObjectsReturnedFromLookupActivity), add(mul(pipeline().parameters.SumOfObjectsToCopyForCurrentBatch, pipeline().parameters.CurrentSequentialNumberOfBatch),\n                             pipeline().parameters.MaxNumberOfObjectsReturnedFromLookupActivity)),\n                            mul(pipeline().parameters.SumOfObjectsToCopyForCurrentBatch, add(pipeline().parameters.CurrentSequentialNumberOfBatch,1)), pipeline().parameters.SumOfObjectsToCopy)}",
+												"type": "Expression"
+											},
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "MetadataDrivenCopyTask1_mbv_ControlDS",
+											"type": "DatasetReference",
+											"parameters": {}
+										},
+										"firstRowOnly": false
+									}
+								},
+								{
+									"name": "CopyObjectsInOneGroup",
+									"description": "Execute another pipeline to copy objects from one group. The objects belonging to this group will be copied parallelly.",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "GetObjectsPerGroupToCopy",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "MetadataDrivenCopyTask1_mbv_BottomLevel",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"ObjectsPerGroupToCopy": {
+												"value": "@activity('GetObjectsPerGroupToCopy').output.value",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"MaxNumberOfObjectsReturnedFromLookupActivity": {
+						"type": "Int"
+					},
+					"TopLevelPipelineName": {
+						"type": "String"
+					},
+					"TriggerName": {
+						"type": "String"
+					},
+					"CurrentSequentialNumberOfBatch": {
+						"type": "Int"
+					},
+					"SumOfObjectsToCopy": {
+						"type": "Int"
+					},
+					"SumOfObjectsToCopyForCurrentBatch": {
+						"type": "Int"
+					},
+					"MainControlTableName": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "MetadataDrivenCopyTask1_mbv_20230706"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-07-06T18:28:09Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MetadataDrivenSampledDataCopyTask_tj3_MiddleLevel')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "This pipeline will copy one batch of objects. The objects belonging to this batch will be copied parallelly.",
+				"activities": [
+					{
+						"name": "DivideOneBatchIntoMultipleGroups",
+						"description": "Divide objects from single batch into multiple sub parallel groups to avoid reaching the output limit of lookup activity.",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@range(0, add(div(pipeline().parameters.SumOfObjectsToCopyForCurrentBatch, pipeline().parameters.MaxNumberOfObjectsReturnedFromLookupActivity),\n                    if(equals(mod(pipeline().parameters.SumOfObjectsToCopyForCurrentBatch, pipeline().parameters.MaxNumberOfObjectsReturnedFromLookupActivity), 0), 0, 1)))",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"batchCount": 50,
+							"activities": [
+								{
+									"name": "GetObjectsPerGroupToCopy",
+									"description": "Get objects (tables etc.) from control table required to be copied in this group. The order of objects to be copied following the TaskId in control table (ORDER BY [TaskId] DESC).",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "WITH OrderedControlTable AS (\n                             SELECT *, ROW_NUMBER() OVER (ORDER BY [TaskId], [Id] DESC) AS RowNumber\n                             FROM @{pipeline().parameters.MainControlTableName}\n                             where TopLevelPipelineName = '@{pipeline().parameters.TopLevelPipelineName}'\n                             and TriggerName like '%@{pipeline().parameters.TriggerName}%' and CopyEnabled = 1)\n                             SELECT * FROM OrderedControlTable WHERE RowNumber BETWEEN @{add(mul(int(item()),pipeline().parameters.MaxNumberOfObjectsReturnedFromLookupActivity),\n                             add(mul(pipeline().parameters.SumOfObjectsToCopyForCurrentBatch, pipeline().parameters.CurrentSequentialNumberOfBatch), 1))}\n                             AND @{min(add(mul(int(item()), pipeline().parameters.MaxNumberOfObjectsReturnedFromLookupActivity), add(mul(pipeline().parameters.SumOfObjectsToCopyForCurrentBatch, pipeline().parameters.CurrentSequentialNumberOfBatch),\n                             pipeline().parameters.MaxNumberOfObjectsReturnedFromLookupActivity)),\n                            mul(pipeline().parameters.SumOfObjectsToCopyForCurrentBatch, add(pipeline().parameters.CurrentSequentialNumberOfBatch,1)), pipeline().parameters.SumOfObjectsToCopy)}",
+												"type": "Expression"
+											},
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "MetadataDrivenSampledDataCopyTask_tj3_ControlDS",
+											"type": "DatasetReference",
+											"parameters": {}
+										},
+										"firstRowOnly": false
+									}
+								},
+								{
+									"name": "CopyObjectsInOneGroup",
+									"description": "Execute another pipeline to copy objects from one group. The objects belonging to this group will be copied parallelly.",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "GetObjectsPerGroupToCopy",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "MetadataDrivenSampledDataCopyTask_tj3_BottomLevel",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"ObjectsPerGroupToCopy": {
+												"value": "@activity('GetObjectsPerGroupToCopy').output.value",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"MaxNumberOfObjectsReturnedFromLookupActivity": {
+						"type": "Int"
+					},
+					"TopLevelPipelineName": {
+						"type": "String"
+					},
+					"TriggerName": {
+						"type": "String"
+					},
+					"CurrentSequentialNumberOfBatch": {
+						"type": "Int"
+					},
+					"SumOfObjectsToCopy": {
+						"type": "Int"
+					},
+					"SumOfObjectsToCopyForCurrentBatch": {
+						"type": "Int"
+					},
+					"MainControlTableName": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "MetadataDrivenSampledDataCopyTask_tj3_20230707"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-07-07T10:09:58Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQLTableCopyUsingUserAssignedManagedID')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "emp_id",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "emp_id",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "name",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "name",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "age",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "age",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "load_dt",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "load_dt",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "file",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "file",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "UserAssignedSQLDataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureSqlTable2",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-07-10T07:22:10Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/UserAssignedSQLDataset')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTable2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/logFileCreationUsingDataFlows')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 1
+						}
+					},
+					{
+						"name": "Set variable2",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Wait1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "fileNameVar",
+							"value": {
+								"value": "@pipeline().parameters.fileName",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Get Metadata1",
+						"type": "GetMetadata",
+						"dependsOn": [
+							{
+								"activity": "Set variable2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "logFile",
+								"type": "DatasetReference",
+								"parameters": {
+									"fileName": {
+										"value": "@pipeline().parameters.fileName",
+										"type": "Expression"
+									}
+								}
+							},
+							"fieldList": [
+								"exists"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "If Condition1",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Get Metadata1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@activity('Get Metadata1').output.exists",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "Data flow2",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "dataflow1",
+											"type": "DataFlowReference",
+											"parameters": {
+												"ADFName": {
+													"value": "'@{pipeline().DataFactory}'",
+													"type": "Expression"
+												},
+												"PipelineName": {
+													"value": "'@{pipeline().Pipeline}'",
+													"type": "Expression"
+												},
+												"Status": {
+													"value": "'@{string('Success')}'",
+													"type": "Expression"
+												},
+												"RunID": {
+													"value": "'@{pipeline().RunId}'",
+													"type": "Expression"
+												},
+												"TriggerName": {
+													"value": "'@{pipeline().TriggerName}'",
+													"type": "Expression"
+												},
+												"fileName": {
+													"value": "'@{variables('fileNameVar')}'",
+													"type": "Expression"
+												}
+											},
+											"datasetParameters": {
+												"source1": {},
+												"sink1": {
+													"fileName": {
+														"value": "@variables('fileNameVar')",
+														"type": "Expression"
+													}
+												}
+											}
+										},
+										"staging": {},
+										"compute": {
+											"coreCount": 8,
+											"computeType": "General"
+										},
+										"traceLevel": "Fine"
+									}
+								}
+							],
+							"ifTrueActivities": [
+								{
+									"name": "Data flow1",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "dataflow1_copy1",
+											"type": "DataFlowReference",
+											"parameters": {
+												"ADFName": {
+													"value": "'@{pipeline().DataFactory}'",
+													"type": "Expression"
+												},
+												"PipelineName": {
+													"value": "'@{pipeline().Pipeline}'",
+													"type": "Expression"
+												},
+												"Status": {
+													"value": "'@{string('Success')}'",
+													"type": "Expression"
+												},
+												"RunID": {
+													"value": "'@{pipeline().RunId}'",
+													"type": "Expression"
+												},
+												"TriggerName": {
+													"value": "'@{pipeline().TriggerName}'",
+													"type": "Expression"
+												},
+												"fileName": {
+													"value": "'@{variables('fileNameVar')}'",
+													"type": "Expression"
+												}
+											},
+											"datasetParameters": {
+												"source1": {},
+												"logTextFileExisting": {
+													"fileName": {
+														"value": "@variables('fileNameVar')",
+														"type": "Expression"
+													}
+												},
+												"sink1": {
+													"fileName": {
+														"value": "@variables('fileNameVar')",
+														"type": "Expression"
+													}
+												}
+											}
+										},
+										"staging": {},
+										"compute": {
+											"coreCount": 8,
+											"computeType": "General"
+										},
+										"traceLevel": "Fine"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"fileName": {
+						"type": "string",
+						"defaultValue": "log_2023_07_16.txt"
+					}
+				},
+				"variables": {
+					"fileNameVar": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-07-16T11:28:38Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflow1')]",
+				"[concat(variables('factoryId'), '/dataflows/dataflow1_copy1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MetadataDrivenCopyTask1_mbv_TopLevel')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "This pipeline will count the total number of objects (tables etc.) required to be copied in this run, come up with the number of sequential batches based on the max allowed concurrent copy task, and then execute another pipeline to copy different batches sequentially.",
+				"activities": [
+					{
+						"name": "GetSumOfObjectsToCopy",
+						"description": "Count the total number of objects (tables etc.) required to be copied in this run.",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": {
+									"value": "SELECT count(*) as count FROM @{pipeline().parameters.MainControlTableName} where TopLevelPipelineName='@{pipeline().Pipeline}' and TriggerName like '%@{pipeline().TriggerName}%' and CopyEnabled = 1",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "MetadataDrivenCopyTask1_mbv_ControlDS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "CopyBatchesOfObjectsSequentially",
+						"description": "Come up with the number of sequential batches based on the max allowed concurrent copy tasks, and then execute another pipeline to copy different batches sequentially.",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetSumOfObjectsToCopy",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@range(0, add(div(activity('GetSumOfObjectsToCopy').output.firstRow.count,\n                    pipeline().parameters.MaxNumberOfConcurrentTasks),\n                    if(equals(mod(activity('GetSumOfObjectsToCopy').output.firstRow.count,\n                    pipeline().parameters.MaxNumberOfConcurrentTasks), 0), 0, 1)))",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "CopyObjectsInOneBatch",
+									"description": "Execute another pipeline to copy one batch of objects. The objects belonging to this batch will be copied parallelly.",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "MetadataDrivenCopyTask1_mbv_MiddleLevel",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"MaxNumberOfObjectsReturnedFromLookupActivity": {
+												"value": "@pipeline().parameters.MaxNumberOfObjectsReturnedFromLookupActivity",
+												"type": "Expression"
+											},
+											"TopLevelPipelineName": {
+												"value": "@{pipeline().Pipeline}",
+												"type": "Expression"
+											},
+											"TriggerName": {
+												"value": "@{pipeline().TriggerName}",
+												"type": "Expression"
+											},
+											"CurrentSequentialNumberOfBatch": {
+												"value": "@item()",
+												"type": "Expression"
+											},
+											"SumOfObjectsToCopy": {
+												"value": "@activity('GetSumOfObjectsToCopy').output.firstRow.count",
+												"type": "Expression"
+											},
+											"SumOfObjectsToCopyForCurrentBatch": {
+												"value": "@min(pipeline().parameters.MaxNumberOfConcurrentTasks, activity('GetSumOfObjectsToCopy').output.firstRow.count)",
+												"type": "Expression"
+											},
+											"MainControlTableName": {
+												"value": "@pipeline().parameters.MainControlTableName",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"MaxNumberOfObjectsReturnedFromLookupActivity": {
+						"type": "Int",
+						"defaultValue": 5000
+					},
+					"MaxNumberOfConcurrentTasks": {
+						"type": "Int",
+						"defaultValue": 20
+					},
+					"MainControlTableName": {
+						"type": "String",
+						"defaultValue": "sqlserverdb.MetaDataDrivenAppMainControlTable"
+					}
+				},
+				"folder": {
+					"name": "MetadataDrivenCopyTask1_mbv_20230706"
+				},
+				"annotations": [
+					"MetadataDrivenSolution"
+				],
+				"lastPublishTime": "2023-07-06T18:28:10Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/MetadataDrivenCopyTask1_mbv_MiddleLevel')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MetadataDrivenSampledDataCopyTask_tj3_TopLevel')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "This pipeline will count the total number of objects (tables etc.) required to be copied in this run, come up with the number of sequential batches based on the max allowed concurrent copy task, and then execute another pipeline to copy different batches sequentially.",
+				"activities": [
+					{
+						"name": "GetSumOfObjectsToCopy",
+						"description": "Count the total number of objects (tables etc.) required to be copied in this run.",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": {
+									"value": "SELECT count(*) as count FROM @{pipeline().parameters.MainControlTableName} where TopLevelPipelineName='@{pipeline().Pipeline}' and TriggerName like '%@{pipeline().TriggerName}%' and CopyEnabled = 1",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "MetadataDrivenSampledDataCopyTask_tj3_ControlDS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "CopyBatchesOfObjectsSequentially",
+						"description": "Come up with the number of sequential batches based on the max allowed concurrent copy tasks, and then execute another pipeline to copy different batches sequentially.",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetSumOfObjectsToCopy",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@range(0, add(div(activity('GetSumOfObjectsToCopy').output.firstRow.count,\n                    pipeline().parameters.MaxNumberOfConcurrentTasks),\n                    if(equals(mod(activity('GetSumOfObjectsToCopy').output.firstRow.count,\n                    pipeline().parameters.MaxNumberOfConcurrentTasks), 0), 0, 1)))",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "CopyObjectsInOneBatch",
+									"description": "Execute another pipeline to copy one batch of objects. The objects belonging to this batch will be copied parallelly.",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "MetadataDrivenSampledDataCopyTask_tj3_MiddleLevel",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"MaxNumberOfObjectsReturnedFromLookupActivity": {
+												"value": "@pipeline().parameters.MaxNumberOfObjectsReturnedFromLookupActivity",
+												"type": "Expression"
+											},
+											"TopLevelPipelineName": {
+												"value": "@{pipeline().Pipeline}",
+												"type": "Expression"
+											},
+											"TriggerName": {
+												"value": "@{pipeline().TriggerName}",
+												"type": "Expression"
+											},
+											"CurrentSequentialNumberOfBatch": {
+												"value": "@item()",
+												"type": "Expression"
+											},
+											"SumOfObjectsToCopy": {
+												"value": "@activity('GetSumOfObjectsToCopy').output.firstRow.count",
+												"type": "Expression"
+											},
+											"SumOfObjectsToCopyForCurrentBatch": {
+												"value": "@min(pipeline().parameters.MaxNumberOfConcurrentTasks, activity('GetSumOfObjectsToCopy').output.firstRow.count)",
+												"type": "Expression"
+											},
+											"MainControlTableName": {
+												"value": "@pipeline().parameters.MainControlTableName",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"MaxNumberOfObjectsReturnedFromLookupActivity": {
+						"type": "Int",
+						"defaultValue": 5000
+					},
+					"MaxNumberOfConcurrentTasks": {
+						"type": "Int",
+						"defaultValue": 20
+					},
+					"MainControlTableName": {
+						"type": "String",
+						"defaultValue": "sqldb.MetaDataDrivenAppMainControlTable"
+					}
+				},
+				"folder": {
+					"name": "MetadataDrivenSampledDataCopyTask_tj3_20230707"
+				},
+				"annotations": [
+					"MetadataDrivenSolution"
+				],
+				"lastPublishTime": "2023-07-07T10:10:00Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/MetadataDrivenSampledDataCopyTask_tj3_MiddleLevel')]"
+			]
+		}
+	]
+}

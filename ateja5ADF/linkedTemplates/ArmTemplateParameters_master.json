@@ -1,0 +1,69 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "ateja5ADF"
+		},
+		"ADLSLinkedService1_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=ateja5demosqlserver.database.windows.net;Initial Catalog=sqlserverdb"
+		},
+		"AzureSqlDatabaseLinkedService1_connectionString": {
+			"value": ""
+		},
+		"MetaDataDrivenAppADLSLInkedService_accountKey": {
+			"value": ""
+		},
+		"MetaDataDrivenAppSampledDataADLS_accountKey": {
+			"value": ""
+		},
+		"MetaDataDrivernAppSampledDadtaDb_connectionString": {
+			"value": ""
+		},
+		"MetaDrivernAppSQLLinkedService_connectionString": {
+			"value": ""
+		},
+		"ParameterisedSQLDBLinkedService_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=ateja5demosqlserver.database.windows.net;Initial Catalog=@{linkedService().dbName};User ID=@{linkedService().username};Password=@{linkedService().password}"
+		},
+		"ParameterizdADLS1_accountKey": {
+			"value": ""
+		},
+		"SalesDBLinkedService_connectionString": {
+			"value": ""
+		},
+		"dataIngestionNotebook1_accessToken": {
+			"value": ""
+		},
+		"ADLSLinkedService1_properties_typeProperties_url": {
+			"value": "https://ateja5storageaccount.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://ateja5storageaccount.dfs.core.windows.net/"
+		},
+		"MetaDataDrivenAppADLSLInkedService_properties_typeProperties_url": {
+			"value": "https://ateja5storageaccount.dfs.core.windows.net/"
+		},
+		"MetaDataDrivenAppSampledDataADLS_properties_typeProperties_url": {
+			"value": "https://ateja5storageaccount.dfs.core.windows.net/"
+		},
+		"ParameterizdADLS1_properties_typeProperties_url": {
+			"value": "https://ateja5storageaccount.dfs.core.windows.net/"
+		},
+		"dataIngestionNotebook1_properties_typeProperties_existingClusterId": {
+			"value": "0710-115713-xaestbsh"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
