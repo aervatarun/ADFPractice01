@@ -1,0 +1,20 @@
+{
+	"name": "MetadataDrivenSampledDataCopyTask_tj3_ControlDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "MetaDataDrivernAppSampledDadtaDb",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MetadataDrivenSampledDataCopyTask_tj3_20230707"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "sqldb",
+			"table": "MetaDataDrivenAppMainControlTable"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

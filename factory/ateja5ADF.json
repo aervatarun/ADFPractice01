@@ -1,0 +1,15 @@
+{
+	"name": "ateja5ADF",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned,UserAssigned",
+		"principalId": "e799fb9c-39bf-4986-ad59-18f7cddeefe2",
+		"tenantId": "2ea1da82-b75c-43ea-b49a-2bca5ec6ccca",
+		"userAssignedIdentities": {
+			"/subscriptions/4f1e63b8-e09a-44ac-be35-0b0f2af09f06/resourcegroups/ateja5_storage/providers/Microsoft.ManagedIdentity/userAssignedIdentities/AZDemoUserID": {
+				"clientId": "c338099f-e5a9-4505-961f-874717568f78",
+				"principalId": "a7a3c63c-9ddd-4853-9efa-4d3dc6738299"
+			}
+		}
+	}
+}

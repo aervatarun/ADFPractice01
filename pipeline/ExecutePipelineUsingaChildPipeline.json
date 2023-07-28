@@ -1,0 +1,43 @@
+{
+	"name": "ExecutePipelineUsingaChildPipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "ParentPipeline",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "IfIterCopyAcitivity",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"var1": {
+							"value": "@pipeline().parameters.inputParam",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"inputParam": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"var1": {
+				"type": "String",
+				"defaultValue": "Tarun"
+			},
+			"arr1": {
+				"type": "Array"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-07-02T07:21:37Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

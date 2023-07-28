@@ -1,0 +1,71 @@
+{
+	"name": "DatabricksSQLTableCopyUsing",
+	"properties": {
+		"activities": [
+			{
+				"name": "dataIngestionNotebookProcess",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "inputTableNameVariable",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/tanishjprof@gmail.com/data-ingestion-notebook-for-ADF",
+					"baseParameters": {
+						"sqlServerInputTable": {
+							"value": "@variables('inputTableName')",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "dataIngestionNotebook1",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "inputTableNameVariable",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "inputTableName",
+					"value": {
+						"value": "@pipeline().parameters.tableParam",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"tableParam": {
+				"type": "string",
+				"defaultValue": "empdata1"
+			}
+		},
+		"variables": {
+			"inputTableName": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-07-10T14:14:34Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

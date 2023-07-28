@@ -1,0 +1,29 @@
+{
+	"name": "logTextFile",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ADLSLinkedService1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "dummy.txt",
+				"folderPath": "logFileUsingTextFiles",
+				"fileSystem": "wafastudiesadfrealtimescenariosplaylist"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": false,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

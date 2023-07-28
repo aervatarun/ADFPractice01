@@ -1,0 +1,87 @@
+{
+	"name": "dataflow1_copy1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "logTextFile",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "logTextExistingFilke",
+						"type": "DatasetReference"
+					},
+					"name": "logTextFileExisting"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "logFile",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "union1"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     ADFName as string,",
+				"     PipelineName as string,",
+				"     Status as string,",
+				"     RunID as string,",
+				"     TriggerName as string,",
+				"     fileName as string",
+				"}",
+				"source(output(",
+				"          Column_1 as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> logTextFileExisting",
+				"source1 derive(ADFName = $ADFName,",
+				"          PipelineName = $PipelineName,",
+				"          Status = $Status,",
+				"          RunID = $RunID,",
+				"          TriggerName = $TriggerName) ~> derivedColumn1",
+				"derivedColumn1 select(mapColumn(",
+				"          ADFName,",
+				"          PipelineName,",
+				"          Status,",
+				"          RunID,",
+				"          TriggerName",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1, logTextFileExisting union(byName: true)~> union1",
+				"union1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:[($fileName)],",
+				"     umask: 0777,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}
